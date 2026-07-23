@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-bg: #1a1a1a;
+  --color-secondary-bg: #2a2a2a;
+  --color-accent: #14b8a6;
+  --color-accent-hover: #06b6d4;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  --font-sans: Poppins, system-ui, sans-serif;
+  --font-montserrat: Montserrat, sans-serif;
+  --font-price: Montserrat, sans-serif;
+  --font-manrope: Manrope, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-primary-bg text-gray-100 antialiased;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 1.05rem;
+    color-scheme: dark;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+  }
+}
+
+@layer components {
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-secondary-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded-full hover:bg-gray-500;
+  }
+
+  .receipt-font {
+    font-family: 'Courier New', Courier, monospace !important;
+  }
+
+  /* Style for date, month and time picker icons */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+
+  /* Remove arrows from number input */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+}
+
+/* Uniform table header styling */
+.table-header-cell {
+  @apply px-4 py-1.5 text-base font-extrabold uppercase tracking-[0.1em] border-b border-white/10 border-r border-white/10;
+  background: linear-gradient(135deg, rgba(120, 80, 40, 0.4) 0%, rgba(80, 60, 30, 0.3) 100%);
+  color: #fbbf24;
+  font-family: 'Manrope', sans-serif;
+}
+
+.table-header-cell:last-child {
+  border-right-width: 0;
+}
+
+.table-data-cell {
+  @apply px-4 py-1.5 border-r border-white/10;
+  background-color: rgba(0, 0, 0, 0.15);
+  font-weight: 500;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+}
+
+.table-data-cell .text-sm {
+  font-size: 1rem !important;
+}
+
+/* Force Manrope on all tds to cover any missed spots */
+td {
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Ensure mono font context preserves monospace in tables (e.g. receipts) */
+.font-mono td {
+  font-family: inherit !important;
+}
+
+.table-data-cell:last-child {
+  border-right-width: 0;
+}
+
+tr:hover .table-data-cell {
+  @apply border-white/10;
+  background-color: rgba(0, 0, 0, 0.05);
+}
