@@ -51,13 +51,13 @@ const Sidebar = () => {
                 <p className="text-sm text-gray-300 font-semibold mt-1">By Dr. Maryum Qazi</p>
             </div>
 
-            <nav className="flex-1 px-4 space-y-2 mt-4">
+            <nav className="flex-1 px-4 space-y-1 mt-4">
                 {navItems.map((item) => (
                     <NavLink
                         key={item.path}
                         to={item.path}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+                            `flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200 ${isActive
                                 ? 'bg-emerald-600 text-white font-medium shadow-lg shadow-emerald-600/20'
                                 : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100'
                             }`

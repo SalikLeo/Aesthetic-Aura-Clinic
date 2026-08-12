@@ -67,6 +67,12 @@ function initDb() {
       patient_id INTEGER,
       date TEXT,
       total REAL,
+      discount REAL DEFAULT 0,
+      item_discount REAL DEFAULT 0,
+      payment_method TEXT DEFAULT 'Cash',
+      cash_amount REAL DEFAULT 0,
+      online_amount REAL DEFAULT 0,
+      address TEXT,
       status TEXT CHECK(status IN ('paid', 'unpaid')) DEFAULT 'unpaid',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (patient_id) REFERENCES patients(id)
@@ -78,6 +84,7 @@ function initDb() {
       service_id INTEGER,
       quantity INTEGER DEFAULT 1,
       price REAL,
+      discount REAL DEFAULT 0,
       FOREIGN KEY (invoice_id) REFERENCES invoices(id),
       FOREIGN KEY (service_id) REFERENCES services(id)
     );
@@ -96,6 +103,7 @@ function initDb() {
       product_id INTEGER,
       quantity INTEGER DEFAULT 1,
       price REAL,
+      discount REAL DEFAULT 0,
       FOREIGN KEY (invoice_id) REFERENCES invoices(id),
       FOREIGN KEY (product_id) REFERENCES products(id)
     );
@@ -124,6 +132,7 @@ function initDb() {
       invoice_id INTEGER,
       doctor_id INTEGER,
       price REAL,
+      discount REAL DEFAULT 0,
       FOREIGN KEY (invoice_id) REFERENCES invoices(id),
       FOREIGN KEY (doctor_id) REFERENCES doctors(id)
     );
@@ -237,6 +246,37 @@ function initDb() {
   }
   if (!invoiceColumns.includes('address')) {
     db.prepare("ALTER TABLE invoices ADD COLUMN address TEXT").run();
+  }
+  if (!invoiceColumns.includes('payment_method')) {
+    db.prepare("ALTER TABLE invoices ADD COLUMN payment_method TEXT DEFAULT 'Cash'").run();
+  }
+  if (!invoiceColumns.includes('cash_amount')) {
+    db.prepare("ALTER TABLE invoices ADD COLUMN cash_amount REAL DEFAULT 0").run();
+  }
+  if (!invoiceColumns.includes('online_amount')) {
+    db.prepare("ALTER TABLE invoices ADD COLUMN online_amount REAL DEFAULT 0").run();
+  }
+  if (!invoiceColumns.includes('item_discount')) {
+    db.prepare("ALTER TABLE invoices ADD COLUMN item_discount REAL DEFAULT 0").run();
+  }
+
+  // Item-wise migrations:
+  const servTableInfo = db.prepare("PRAGMA table_info(invoice_services)").all();
+  const servColumns = servTableInfo.map(c => c.name);
+  if (!servColumns.includes('discount')) {
+    db.prepare("ALTER TABLE invoice_services ADD COLUMN discount REAL DEFAULT 0").run();
+  }
+
+  const prodTableInfo = db.prepare("PRAGMA table_info(invoice_products)").all();
+  const prodColumns = prodTableInfo.map(c => c.name);
+  if (!prodColumns.includes('discount')) {
+    db.prepare("ALTER TABLE invoice_products ADD COLUMN discount REAL DEFAULT 0").run();
+  }
+
+  const docTableInfo = db.prepare("PRAGMA table_info(invoice_doctors)").all();
+  const docColumns = docTableInfo.map(c => c.name);
+  if (!docColumns.includes('discount')) {
+    db.prepare("ALTER TABLE invoice_doctors ADD COLUMN discount REAL DEFAULT 0").run();
   }
 
   // Migration: Add doctor_id column to sessions table if it doesn't exist
